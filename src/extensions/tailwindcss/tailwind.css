@@ -1,0 +1,32 @@
+/**
+ * This is the CSS base class used to generate Tailwind CSS Code
+ */
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: IBMP;
+    src: url(~assets/fonts/IBMPlexSans-Regular.woff);
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: IBMP;
+    src: url(~assets/fonts/IBMPlexSans-SemiBold.woff);
+    font-weight: 600;
+  }
+
+  /* * {
+    
+    box-sizing: border-box;
+  } */
+
+  body {
+    font-family: IBMP, serif;
+    font-weight: 400;
+  }
+}
