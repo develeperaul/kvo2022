@@ -14,11 +14,15 @@
     "core-js": "^3.6.5",
     "dotenv": "^16.0.0",
     "ky": "^0.28.7",
+    "moment": "^2.29.1",
     "normalize.css": "^8.0.1",
     "quasar": "^2.0.0",
+    "vee-validate": "^4.5.8",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",
-    "vuex": "^4.0.1"
+    "vuex": "^4.0.1",
+    "yap": "0.0.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@quasar/app": "^3.0.0",

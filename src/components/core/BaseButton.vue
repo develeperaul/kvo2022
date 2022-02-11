@@ -1,5 +1,5 @@
 <template>
-  <button type="type" :class="`bg bg-${color} py-${py} color-${textcolor}`">
+  <button :type="type" :class="`btn btn-${color} py-${py} color-${textcolor}`">
     <span class="tw-text-center">
       <slot> </slot>
     </span>
@@ -30,19 +30,19 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.bg {
+.btn {
   width: 100%;
   font-weight: 600;
   border-radius: 4px;
   padding-left: 10px;
   padding-right: 10px;
   &-secondary {
-    background-color: var($secondary);
+    background-color: $secondary;
     color: white;
   }
   &-secondary-l {
-    background-color: var($secondary-light);
-    color: var($secondary);
+    background-color: $secondary-light;
+    color: $secondary;
   }
 }
 .py {

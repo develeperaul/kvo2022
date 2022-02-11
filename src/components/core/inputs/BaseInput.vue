@@ -4,7 +4,9 @@
     v-model="modelValue"
     :type="type"
     :placeholder="placeholder"
-    class="q-mt-md"
+    no-error-icon
+    :bottom-slots="false"
+    :error="error"
     dense
     @update:model-value="(e) => $emit('update:modelValue', e)"
   >
@@ -12,15 +14,24 @@
       <slot> </slot>
     </template>
   </q-input>
+  <!-- <span class="danger">{{ textError }}</span> -->
 </template>
 
 <script>
 export default {
   name: "base-input",
   props: {
+    textError: {
+      type: String,
+      default: undefined,
+    },
     type: {
       type: String,
       default: "text",
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
     },
     isPwd: {
       type: Boolean,
@@ -34,7 +45,16 @@ export default {
       type: [String, Number],
       default: "",
     },
+    error: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ["update:modelValue"],
 };
 </script>
+<style lang="scss" scoped>
+.danger {
+  color: $negative;
+}
+</style>
