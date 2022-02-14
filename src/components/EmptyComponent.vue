@@ -1,11 +1,11 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-justify-between tw-items-center">
+  <div class="tw-flex tw-flex-col tw-justify-between tw-items-center pb">
     <div class="tw-text-center">
       <h1 class="empty__title">{{ title }}</h1>
       <p class="empty__text">{{ text }}</p>
     </div>
     <base-icons name="empty" />
-    <base-button> {{ btnText }} </base-button>
+    <base-button @click="link"> {{ btnText }} </base-button>
   </div>
 </template>
 
@@ -27,13 +27,18 @@ export default {
       type: String,
       required: true,
     },
-    // to: {
-    //   type: String,
-    //   required: true
-    // }
+    to: {
+      type: String,
+      required: true,
+    },
   },
   setup() {
     return {};
+  },
+  methods: {
+    link() {
+      this.$router.push({ name: this.to });
+    },
   },
 };
 </script>

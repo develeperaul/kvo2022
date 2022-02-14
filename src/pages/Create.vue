@@ -51,8 +51,12 @@
           :error="measuresError ? true : false"
         />
       </div>
-      <div class="create__anonim">Анонимная подача</div>
 
+      <base-checkbox
+        class="create__anonim"
+        label="Анонимная подача"
+        v-model="anonim"
+      />
       <div class="create__fail">
         <input
           hidden
@@ -170,6 +174,8 @@ export default {
       popup.value = false;
     };
 
+    const anonim = ref(false);
+
     const popup = ref(false);
     const width = ref(0);
     const updateWidth = () => {
@@ -185,7 +191,7 @@ export default {
       let formData = new FormData();
       formData.append("file", e.target.files[0]);
       await axios
-        .post("http://raul.2apps.ru/uploads", formData, {
+        .post("http://raul.2apps.ru/uploads/index.php", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -193,9 +199,14 @@ export default {
         .then(function () {
           console.log("SUCCESS!!");
         })
-        .catch(function () {
+        .catch(function (e) {
+          console.log(e);
           console.log("FAILURE!!");
         });
+    };
+    const onRemoveFile = (index) => {
+      console.log(index);
+      files.value.splice(index, 1);
     };
 
     return {
@@ -211,6 +222,8 @@ export default {
       subdivisionError,
       onSubmit,
 
+      anonim,
+
       blurDate,
 
       choice,
@@ -222,15 +235,11 @@ export default {
 
       files,
       fileSelect,
+      onRemoveFile,
     };
   },
   // setup() {
   //   const date = ref("");
-
-  //   const onRemoveFile = (index) => {
-  //     console.log(index);
-  //     files.value.splice(index, 1);
-  //   };
 
   //   const schema = yup.object({
   //     measures: yup.string().required(),

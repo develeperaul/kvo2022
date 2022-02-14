@@ -3,7 +3,7 @@
     :to="{ name }"
     v-slot="{ isExactActive }"
     exact-active-class="active"
-    class="link tw-flex tw-flex-col tw-items-center tw-justify-between"
+    class="link tw-flex tw-flex-col tw-items-center tw-justify-between tw-relative"
   >
     <template>
       <slot></slot>
@@ -16,6 +16,7 @@
     >
       {{ itemName }}
     </span>
+    <span v-if="name == 'messages'" class="notification"></span>
   </router-link>
 </template>
 <script>
@@ -59,5 +60,15 @@ export default {
 }
 .router-link-exact-active {
   color: $secondary;
+}
+.notification {
+  position: absolute;
+  right: 40px;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background-color: $negative;
 }
 </style>

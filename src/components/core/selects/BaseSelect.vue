@@ -19,7 +19,17 @@
     <div class="options__top_line"></div>
     <div class="opiton_list p-content">
       <div class="option_item item">
-        <h3 class="item__title" @click="choice">Название подразделения</h3>
+        <h3 class="item__title" @click="choice">Башнефтегеофизика Ленина 1</h3>
+        <div class="options__item_line"></div>
+        <h3 class="item__title" @click="choice">Башнефтегеофизика Ленина 13</h3>
+        <div class="options__item_line"></div>
+        <h3 class="item__title" @click="choice">
+          Башнефтегеофизика Ленина 137
+        </h3>
+        <div class="options__item_line"></div>
+        <h3 class="item__title" @click="choice">
+          Башнефтегеофизика Ленина 139
+        </h3>
         <div class="options__item_line"></div>
       </div>
     </div>
@@ -75,9 +85,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.close {
-  color: $grey-light;
-}
 .options {
   &__top {
     padding-top: 15px;

@@ -14,12 +14,13 @@
       </div>
     </div>
   </q-page> -->
-  <q-page>
+  <q-page class="tw-grid">
     <Empty
       v-bind="{
         title: 'История поданных КВО',
         text: 'У вас пока нет обработанных КВО',
         btnText: 'Создать КВО',
+        to: 'create',
       }"
     />
   </q-page>

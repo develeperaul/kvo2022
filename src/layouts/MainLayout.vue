@@ -8,7 +8,7 @@
           width="25px"
           height="25px"
           :ratio="16 / 9"
-          class=""
+          @click="logOut"
         />
       </q-toolbar>
     </q-header>
@@ -26,7 +26,8 @@
 <script>
 import EssentialLink from "components/EssentialLink.vue";
 import NavLink from "components/NavLink";
-
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 const linksList = [
   {
     title: "Docs",
@@ -85,12 +86,19 @@ export default defineComponent({
   setup() {
     const leftDrawerOpen = ref(false);
 
+    const store = useStore();
+    const router = useRouter();
+    const logOut = function () {
+      store.commit("auth/login", false);
+      router.push({ name: "auth" });
+    };
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
+      logOut,
     };
   },
 });
