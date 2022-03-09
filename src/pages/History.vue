@@ -1,20 +1,20 @@
 <template>
-  <!-- <q-page padding>
+  <q-page padding>
     <h1 class="history__title">История поданных КВО</h1>
-    <div class="application">
+    <div v-for="item in list" :key="item.id" class="application">
       <div class="application__top tw-flex tw-justify-between">
         <base-status
-          bg="negative"
-          @click="() => $router.push({ name: 'item', params: { id: 1 } })"
+          :bg="item.status"
+          @click="() => $router.push({ name: 'item', params: { id: item.id } })"
         />
-        <span class="application__number">№ 8432</span>
+        <span class="application__number">{{item.title}}</span>
       </div>
       <div class="application__bottom">
-        <p class="application__text">АУП АО “Башнефтегеофизика” Ленина 13</p>
+        <p class="application__text">{{item.division}}</p>
       </div>
     </div>
-  </q-page> -->
-  <q-page class="tw-grid">
+  </q-page>
+  <!-- <q-page class="tw-grid">
     <Empty
       v-bind="{
         title: 'История поданных КВО',
@@ -23,16 +23,45 @@
         to: 'create',
       }"
     />
-  </q-page>
+  </q-page> -->
 </template>
 
 <script>
 import Empty from "src/components/EmptyComponent.vue";
+import axios from 'axios';
+
+import {createNamespacedHelpers } from "vuex"
+const {mapState, mapGetters} = createNamespacedHelpers('kvo')
 export default {
   // name: 'PageName',
   components: {
     Empty,
   },
+  data: ()=>{
+    return {
+      
+    }
+  },
+  computed: {
+       ...mapState(['loading', 'list'])
+  },
+  methods: {
+    async getKvo(){
+      try {
+        this.$store.commit("kvo/setLoading", true)
+        await axios("http://raul.2apps.ru/json/history.json")
+          .then(response=>this.$store.commit("kvo/setList", response.data))
+      }catch (e) {
+        throw e
+      } finally{
+        this.$store.commit("kvo/setLoading", false)
+      }
+    }
+  },
+  async mounted(){
+    await this.getKvo();
+  }
+
 };
 </script>
 <style lang="scss" scoped>

@@ -1,8 +1,9 @@
 <template>
-  <span class="status" :class="`status-${bg}`"> В работе, просрочено </span>
+  <span class="status" :class="`status-${bg}`">{{statusList[bg]}}</span>
 </template>
 
 <script>
+import {statusNameList} from "src/helper/statusNameList"
 export default {
   name: "base-status",
   props: {
@@ -11,6 +12,11 @@ export default {
       required: true,
     },
   },
+  data: ()=>{
+    return {
+      statusList:statusNameList
+    } 
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -21,20 +27,20 @@ export default {
   font-size: 14px;
   line-height: 18px;
   color: #ffffff;
-  &-negative {
+  &-at_work_overdue {
     background-color: $negative;
   }
-  &-positive {
+  &-eliminated {
     background-color: $positive;
   }
-  &-warning {
+  &-at_work {
     background-color: $warning;
   }
-  &-purple {
+  &-sent_for_processing {
     background-color: $purple;
   }
 
-  &-billet {
+  &-fixed_out_of_time {
     background-color: $billet;
     color: $accent;
   }
