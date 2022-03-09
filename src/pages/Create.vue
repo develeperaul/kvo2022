@@ -162,7 +162,35 @@ export default {
 
     const onSubmit = handleSubmit((values) => {
       console.log("values");
+      sendAplication()
     });
+
+    const sendAplication = async () => {
+        let formData = new FormData();
+        formData.append("date", date.value)
+        formData.append("measures", measures.value)
+        formData.append("place", place.value)
+        formData.append("subdivision", subdivision.value)
+        formData.append("danger", danger.value)
+        // formData.append("files", files.value)
+        const obj = {
+          date:date.value,
+          measures: measures.value,
+          place: place.value,
+          subdivision: subdivision.value,
+          danger: danger.value,
+          // files: files.value
+        }
+        console.log(JSON.stringify(obj))
+        try {
+          await axios
+            .post("http://raul.2apps.ru/sendkvo/index.php", 
+              formData,
+            )
+        } catch (e) {
+          throw e
+        }
+    }
 
     const blurDate = (e) => {
       console.log(Date.parse(e.target.value));
@@ -204,6 +232,7 @@ export default {
           console.log("FAILURE!!");
         });
     };
+    
     const onRemoveFile = (index) => {
       console.log(index);
       files.value.splice(index, 1);
