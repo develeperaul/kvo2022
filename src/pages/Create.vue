@@ -16,14 +16,8 @@
           placeholder="Выберите подразделение"
           v-model="subdivision"
           :error="subdivisionError ? true : false"
+          :options="options"
         />
-        <!-- <base-input
-          placeholder="Выберите подразделение"
-          v-model.option="option"
-          v-model="subdivision"
-          @focus="popup = true"
-          :error="subdivisionError ? true : false"
-        /> -->
       </div>
       <div class="field">
         <label class="field__label" for="">Место обнаружения опасности:</label>
@@ -101,25 +95,7 @@
       <base-button type="submit"> Создать </base-button>
     </form>
   </q-page>
-  <!-- <q-drawer side="right" :width="width" v-model="popup" behavior="mobile">
-    <div class="p-content options__top">
-      <h1>Выберите подразделение</h1>
 
-      <q-icon
-        class="close"
-        size="28px"
-        name="r_clear"
-        @click="popup = false"
-      ></q-icon>
-    </div>
-    <div class="options__top_line"></div>
-    <div class="opiton_list p-content">
-      <div class="option_item item">
-        <h3 class="item__title" @click="choice">Название подразделения</h3>
-        <div class="options__item_line"></div>
-      </div>
-    </div>
-  </q-drawer> -->
 </template>
 
 <script>
@@ -196,7 +172,21 @@ export default {
       console.log(Date.parse(e.target.value));
     };
 
+
     const option = ref("");
+    const options = ref(null);
+    const getOptions = async ()=>{
+      try {
+        await axios
+          .get("http://raul.2apps.ru/json/subdivision.json")
+          .then(response =>{
+            if(response.data.length > 0)options.value=response.data;else options.value=null;
+          })
+
+      }catch (e) {throw e}
+      finally{}
+    }
+    getOptions()
     const choice = (e) => {
       option.value = e.srcElement.innerText;
       popup.value = false;
@@ -257,6 +247,7 @@ export default {
 
       choice,
       option,
+      options ,
 
       popup,
       width,
@@ -267,61 +258,6 @@ export default {
       onRemoveFile,
     };
   },
-  // setup() {
-  //   const date = ref("");
-
-  //   const schema = yup.object({
-  //     measures: yup.string().required(),
-  //   });
-  //   const { handleSubmit } = useForm({
-  //     validationSchema: schema,
-  //   });
-
-  //   const { value: measures, errorMessage: measuresError } =
-  //     useField("measures");
-
-  //   const onSubmit = handleSubmit((values) => {
-  //     console.log("values");
-  //   });
-  //   // const dateСomparison = computed(() => {
-  //   //   if ((date.value = "")) return false;
-  //   //   const curretDate = new Date();
-  //   //   const choiceDate = new Date(date.value);
-  //   // });
-
-  //   // watch(date, (newVal) => {
-  //   //   const curretDate = new Date();
-  //   //   console.log(Date.parse(curretDate) < Date.parse(newVal));
-  //   //   if (newVal.length != 0 && Date.parse(curretDate) < Date.parse(newVal))
-  //   //     date.value = "";
-  //   // });
-
-  //   const popup = ref(false);
-  //   const width = ref(0);
-  //   const updateWidth = () => {
-  //     width.value = window.innerWidth;
-  //   };
-
-  //   const choice = (e) => {
-  //     option.value = e.srcElement.innerText;
-  //     popup.value = false;
-  //   };
-  //   updateWidth();
-  //   return {
-  //     popup,
-  //     width,
-  //     choice,
-  //     option,
-  //     date,
-  //     blurDate,
-  //     fileSelect,
-  //     onRemoveFile,
-  //     files,
-  //     onSubmit,
-  //     measures,
-  //     measuresError,
-  //   };
-  // },
 };
 </script>
 <style lang="scss" scoped>

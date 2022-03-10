@@ -18,19 +18,11 @@
     </div>
     <div class="options__top_line"></div>
     <div class="opiton_list p-content">
-      <div class="option_item item">
-        <h3 class="item__title" @click="choice">Башнефтегеофизика Ленина 1</h3>
-        <div class="options__item_line"></div>
-        <h3 class="item__title" @click="choice">Башнефтегеофизика Ленина 13</h3>
-        <div class="options__item_line"></div>
-        <h3 class="item__title" @click="choice">
-          Башнефтегеофизика Ленина 137
-        </h3>
-        <div class="options__item_line"></div>
-        <h3 class="item__title" @click="choice">
-          Башнефтегеофизика Ленина 139
-        </h3>
-        <div class="options__item_line"></div>
+      <div class="option_item item" >
+        <template v-for="item in options" :key="item.id">
+          <h3 class="item__title" @click="choice($event, item.id)">{{item.title}}</h3>
+          <div class="options__item_line"></div>
+        </template>
       </div>
     </div>
   </q-drawer>
@@ -57,6 +49,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    options: {
+      type: [Array, null], 
+      required: true
+    }
   },
   inheritAttrs: false,
   setup(props, { emit }) {
@@ -67,13 +63,16 @@ export default {
     };
     updateWidth();
 
-    const option = ref("");
-    const choice = (e) => {
-      option.value = e.srcElement.innerText;
+    const option = ref(null);
+    const choice = (e,id) => {
+      // option.value = {title:e.srcElement.innerText, id};
+      option.value = e.srcElement.innerText
+      emit("update:modelValue", id);
       popup.value = false;
     };
     watch(option, () => {
-      emit("update:modelValue", option.value);
+      const title = option.value.title
+      // emit("update:modelValue", 'hi');
     });
     return {
       popup,

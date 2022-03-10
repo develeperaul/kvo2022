@@ -102,7 +102,7 @@
   </svg>
 
   <svg
-    v-else-if="name == 'success'"
+    v-else-if="name == 'accept'"
     width="22"
     height="22"
     viewBox="0 0 22 22"
@@ -117,7 +117,7 @@
   </svg>
 
   <svg
-    v-else-if="name == 'failed'"
+    v-else-if="name == 'reject'"
     width="22"
     height="22"
     viewBox="0 0 22 22"
