@@ -1,8 +1,13 @@
 <template>
-  <button :type="type" :class="`btn btn-${color} py-${py} color-${textcolor}`">
-    <span class="tw-text-center">
+  <button :type="type" :class="`btn btn-${color}  color-${textcolor}`">
+    <span
+      class="tw-text-center tw-inline-block"
+      :class="`py-${py}`"
+      v-if="$slots.default"
+    >
       <slot> </slot>
     </span>
+    <slot name="loading" />
   </button>
 </template>
 
@@ -32,6 +37,7 @@ export default {
 <style lang="scss" scoped>
 .btn {
   width: 100%;
+  min-height: 47px;
   font-weight: 600;
   border-radius: 4px;
   padding-left: 10px;

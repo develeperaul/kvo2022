@@ -9,7 +9,7 @@ require("dotenv").config();
 
 const env = {
   API: process.env.DEVAPI,
-  APP_VERSION: require("./package.json").version
+  APP_VERSION: require("./package.json").version,
 };
 
 const { configure } = require("quasar/wrappers");
@@ -50,15 +50,15 @@ module.exports = configure(function (ctx) {
       vueRouterMode: "hash", // available values: 'hash', 'history'
       env: ctx.dev
         ? {
-          // so on dev we'll have
-          ...env,
-          API: process.env.DEVAPI
-        }
+            // so on dev we'll have
+            ...env,
+            API: process.env.DEVAPI,
+          }
         : {
-          // and on build (production):
-          ...env,
-          API: process.env.PRODAPI
-        },
+            // and on build (production):
+            ...env,
+            API: process.env.PRODAPI,
+          },
       // transpile: false,
       // publicPath: '/',
 
@@ -90,7 +90,13 @@ module.exports = configure(function (ctx) {
       },
       port: 8080,
       open: true, // opens browser window automatically
-      
+      proxy: {
+        // proxy all requests starting with /api to jsonplaceholder
+        "/api/v1": {
+          target: "http://62.33.236.149",
+          changeOrigin: true,
+        },
+      },
     },
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework

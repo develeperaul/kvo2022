@@ -1,65 +1,62 @@
-import { user  } from "src/api/auth";
+import { user, auth } from "src/api/auth";
 
 export default {
   namespaced: true,
-  state: () => ({ 
+  state: () => ({
     auth: false,
     token: null,
     name: null,
     last_name: null,
-   }),
-  mutations:{
-    login(state, res){
-      if(res.token){
-        localStorage.setItem('auth',true)
-        const auth = localStorage.getItem('auth')
+  }),
+  mutations: {
+    login(state, res) {
+      if (res.token) {
+        localStorage.setItem("auth", true);
+        const auth = localStorage.getItem("auth");
         if (auth) {
-        try {
-          state.auth = JSON.parse(localStorage.getItem("auth"))
-          state.token = res.token
-          state.name = res.name
-          state.last_name = res.last_name
+          try {
+            state.auth = JSON.parse(localStorage.getItem("auth"));
+            state.token = res.token;
+            state.name = res.name;
+            state.last_name = res.last_name;
+          } catch (e) {
+            state.auth = false;
+            state.token = null;
+            state.name = null;
+            state.last_name = null;
+          }
         }
-        catch (e) {
-          state.auth = false
-          state.token = null
-          state.name = null
-          state.last_name = null
-        }
-
-      }
-      }
-      else {
-        localStorage.removeItem('auth')
-        state.auth = false
+      } else {
+        localStorage.removeItem("auth");
+        state.auth = false;
       }
     },
-
   },
 
-  getters:{
-    isAuth(state){
-      return state.auth
+  getters: {
+    isAuth(state) {
+      return state.auth;
     },
 
-    user(state){
-      const {name, last_name} = state
+    user(state) {
+      const { name, last_name } = state;
       return {
         name,
-        last_name
-      }
-    }
+        last_name,
+      };
+    },
   },
 
   actions: {
-    async getUser({commit}, obj){
-      const res = await user(obj)
-      commit('login', res)
-      console.log(res)
-    }
-  }
-}
-
-
-  
-  
+    async getUser({ commit }, obj) {
+      const res = await user(obj);
+      commit("login", res);
+      console.log(res);
+    },
+    async auth({ commit }, obj) {
+      const user = await auth(obj);
+      localStorage.setItem("accessToken", user.data.accessToken);
+      console.log(token);
+    },
+  },
+};

@@ -33,7 +33,12 @@
       </div>
     </div>
 
-    <base-button type="submit"> Войти </base-button>
+    <base-button v-if="!loading" type="submit"> Войти </base-button>
+    <base-button v-else>
+      <template #loading>
+        <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+      </template>
+    </base-button>
   </form>
 </template>
 
@@ -77,23 +82,30 @@ export default {
     const isAuth = computed(() => store.getters["auth/isAuth"]);
     const loading = ref(false);
 
-    const onSubmit = handleSubmit((values) => {
+    const onSubmit = handleSubmit(async (values) => {
       loading.value = true;
-      setTimeout(async () => {
-        await store.dispatch("auth/getUser", values);
+      try {
+        await store.dispatch("auth/auth", values);
+      } catch (e) {
+        throw e;
+      } finally {
         loading.value = false;
+      }
+      // setTimeout(async () => {
+      //   await store.dispatch("auth/getUser", values);
+      //   loading.value = false;
 
-        if (!isAuth.value) {
-          resetForm();
+      //   if (!isAuth.value) {
+      //     resetForm();
 
-          err.value = "Неверный логин или пароль";
+      //     err.value = "Неверный логин или пароль";
 
-          // login.value = undefined
-          // password.value = undefined
-        } else {
-          router.push({ name: "history" });
-        }
-      }, 3000);
+      //     // login.value = undefined
+      //     // password.value = undefined
+      //   } else {
+      //     router.push({ name: "history" });
+      //   }
+      // }, 3000);
     });
 
     return {
