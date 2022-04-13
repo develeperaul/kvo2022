@@ -21,6 +21,7 @@
         color="secondary"
         :options="optionsFn"
         :locale="myLocale"
+        mask="YYYY-MM-DD"
       >
         <div class="row items-center justify-end q-gutter-sm">
           <q-btn label="Отмена" color="secondary" flat v-close-popup></q-btn>

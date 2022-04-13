@@ -86,6 +86,7 @@ export default {
       loading.value = true;
       try {
         await store.dispatch("auth/auth", values);
+        router.push({ name: "history" });
       } catch (e) {
         throw e;
       } finally {

@@ -1,5 +1,5 @@
 import { user, auth } from "src/api/auth";
-
+import * as Tokens from "src/api/helper/tokens";
 export default {
   namespaced: true,
   state: () => ({
@@ -55,8 +55,9 @@ export default {
     },
     async auth({ commit }, obj) {
       const user = await auth(obj);
-      localStorage.setItem("accessToken", user.data.accessToken);
-      console.log(token);
+      Tokens.setTokensData(user.data.accessToken);
+      // localStorage.setItem("accessToken", user.data.accessToken);
+      // console.log(token);
     },
   },
 };

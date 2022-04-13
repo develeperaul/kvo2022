@@ -1,14 +1,16 @@
 <template>
+  <!-- <q-header style="background-color: white"> -->
   <div class="header-drawer p-content pt">
     <q-icon
       class="close"
       size="28px"
       name="r_arrow_back"
-      @click="() => $router.push({ name: to })"
+      @click="() => $router.go(-1)"
     ></q-icon>
     <h3 class="header-drawer__text">{{ name }}</h3>
   </div>
   <div class="line" v-bind="$attrs"></div>
+  <!-- </q-header> -->
 </template>
 
 <script>

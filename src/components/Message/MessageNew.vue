@@ -1,53 +1,115 @@
 <template>
-    <div class="message__nothing" v-if="false">
-      <p>У Вас нет новых сообщений</p>
-    </div>
-    <div v-for="message in messages" :key="message.id">
+  <div v-if="loading">
+    <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+  </div>
+  <template v-else>
+    <div v-if="list && list.length > 0" ref="scrollComponent">
+      <div v-for="message in list" :key="message.id">
         <div class="line"></div>
         <div class="message__top">
           <div class="message__left">
-            
-            <base-icons v-if="message.value" :name="message.value" class="message__status_space-right"/>
-            <h4 class="message__status ">
-              {{message.title}}
-            </h4>
+            <base-icons
+              v-if="message.value"
+              :name="message.value"
+              class="message__status_space-right"
+            />
+            <h4 class="message__status">Изменен статус КВО</h4>
           </div>
           <div class="message__right">
-            <p class="message__time">{{message.date}}</p>
+            <p class="message__time">{{ message.createdAt }}</p>
           </div>
         </div>
         <div class="message__middle">
-          <p class="message__text">{{message.division}}</p>
-          <div class="message__middle-status" v-if="message.value===null">
+          <p class="message__text">{{ message.card.department.name }}</p>
+          <!-- <div class="message__middle-status" v-if="message.value === null">
+          <span>Статус:&nbsp;</span>
+          <base-status :bg="message.newStatus" />
+        </div> -->
+          <div class="message__middle-status">
             <span>Статус:&nbsp;</span>
-            <base-status
-              :bg="message.status"
-            />
-
+            <base-status :bg="message.newStatus.value" />
           </div>
         </div>
         <div class="message__bottom">
           <span
             class="message__bottom_space"
-            @click="() => $router.push({ name: 'message', params: { id: 1 } })"
-            >{{message.value=='reject'?'Причина отклонения':'Посмотреть данные'}}</span
+            @click="
+              () =>
+                $router.push({ name: 'item', params: { id: message.card.id } })
+            "
+            >{{
+              message.value == "reject"
+                ? "Причина отклонения"
+                : "Посмотреть данные"
+            }}</span
           >
-          <span>Прочитано</span>
+          <span @click="markAsRead(message.id)">Прочитано</span>
+        </div>
       </div>
-
+      <div v-if="scrollLoading">
+        <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+      </div>
     </div>
+    <div class="message__nothing" v-else>
+      <p>У Вас нет новых сообщений</p>
+    </div>
+  </template>
 </template>
 
 <script>
+import { useStore } from "vuex";
+import { ref, computed, onMounted } from "vue";
+import useInfiniteScroll from "src/composition/useInfiniteScroll";
 export default {
-  name: 'New',
-  props:{
+  name: "New",
+  props: {
     messages: {
-      type: [Array,null],
+      type: [Array, null],
       required: true,
-    }
-  }
-}
+    },
+  },
+  setup() {
+    const store = useStore();
+    const objParams = {
+      nameSpace: "messages",
+      paginateList: (current) =>
+        store.dispatch("messages/getMessagesPaginate", {
+          page: current + 1,
+          isRead: 0,
+        }),
+    };
+    const { scrollComponent, scrollLoading } = useInfiniteScroll(objParams);
+    const list = computed(() => store.getters["messages/listUpdateDateTime"]);
+    const getMessages = async () => {
+      try {
+        store.commit("messages/setLoading", true);
+        const isRead = 0;
+        await store.dispatch("messages/getMessages", isRead);
+      } catch (e) {
+        throw e;
+      } finally {
+        store.commit("messages/setLoading", false);
+      }
+    };
+    onMounted(async () => (list.value === null ? await getMessages() : null));
+
+    const markAsRead = async (id) => {
+      try {
+        await store.dispatch("messages/markAsRead", id);
+      } catch (e) {
+        throw e;
+      } finally {
+      }
+    };
+    return {
+      list,
+      markAsRead,
+      scrollComponent,
+      scrollLoading,
+      loading: computed(() => store.state.messages.loading),
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 .line {
@@ -93,7 +155,6 @@ export default {
     font-size: 14px;
     line-height: 18px;
     color: $accent;
-    
   }
   &__middle-status {
     padding-top: 20px;

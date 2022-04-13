@@ -7,6 +7,7 @@
     no-error-icon
     :bottom-slots="false"
     :error="error"
+    :mask="mask"
     dense
     @update:model-value="(e) => $emit('update:modelValue', e)"
   >
@@ -48,6 +49,10 @@ export default {
     error: {
       type: Boolean,
       default: false,
+    },
+    mask: {
+      type: String,
+      default: "",
     },
   },
   emits: ["update:modelValue"],

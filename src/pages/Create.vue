@@ -55,7 +55,7 @@
         <input
           hidden
           type="file"
-          ref="uploadPhoto"
+          ref="uploadFile"
           accept="image/*"
           @change="fileSelect($event)"
         />
@@ -73,7 +73,7 @@
             ></q-icon>
           </div>
           <button
-            @click="$refs.uploadPhoto.click()"
+            @click="$refs.uploadFile.click()"
             class="upload__btn"
             v-if="files.length == 0"
             type="button"
@@ -83,7 +83,7 @@
           </button>
 
           <base-button
-            @click="$refs.uploadPhoto.click()"
+            @click="$refs.uploadFile.click()"
             v-bind="{ py: 'md', color: 'secondary-l' }"
             v-else
           >
@@ -95,12 +95,12 @@
       <base-button type="submit"> Создать </base-button>
     </form>
   </q-page>
-
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import axios from "axios";
+import { useStore } from "vuex";
 import BaseIcons from "src/components/core/BaseIcons.vue";
 import BaseButton from "src/components/core/BaseButton.vue";
 import { useField, useForm } from "vee-validate";
@@ -125,7 +125,7 @@ export default {
       danger: yup.string().required(),
       measures: yup.string().required(),
     });
-    const { handleSubmit } = useForm({
+    const { handleSubmit, resetForm } = useForm({
       validationSchema: schema,
     });
     const { value: date, errorMessage: dateError } = useField("date");
@@ -138,55 +138,60 @@ export default {
 
     const onSubmit = handleSubmit((values) => {
       console.log("values");
-      sendAplication()
+      sendAplication();
     });
 
     const sendAplication = async () => {
-        let formData = new FormData();
-        formData.append("date", date.value)
-        formData.append("measures", measures.value)
-        formData.append("place", place.value)
-        formData.append("subdivision", subdivision.value)
-        formData.append("danger", danger.value)
-        // formData.append("files", files.value)
-        const obj = {
-          date:date.value,
-          measures: measures.value,
-          place: place.value,
-          subdivision: subdivision.value,
-          danger: danger.value,
-          // files: files.value
-        }
-        console.log(JSON.stringify(obj))
-        try {
-          await axios
-            .post("http://raul.2apps.ru/sendkvo/index.php", 
-              formData,
-            )
-        } catch (e) {
-          throw e
-        }
-    }
+      let formData = new FormData();
+      formData.append("incidentDate", date.value);
+      formData.append("actionsTakenToResolve", measures.value);
+      formData.append("locationName", place.value);
+      formData.append("departmentId", subdivision.value);
+      formData.append("incidentDescription", danger.value);
+      formData.append("isAnonymous", anonim.value ? 1 : 0);
+      files.value.forEach((file) => formData.append("files[]", file));
+      try {
+        store.commit("kvo/setLoading", true);
+        await store.dispatch("kvo/createKVO", formData);
+      } catch (e) {
+        throw e;
+      } finally {
+        resetForm();
+        // date.value = null;
+        // date.value = null;
+        // date.value = null;
+        // measures.value = null;
+        // subdivision.value = null;
+        // danger.value = null;
+        // anonim.value = null;
+        // files.value = [];
+        store.commit("kvo/setLoading", false);
+      }
+    };
 
     const blurDate = (e) => {
       console.log(Date.parse(e.target.value));
     };
 
-
+    const store = useStore();
     const option = ref("");
-    const options = ref(null);
-    const getOptions = async ()=>{
+    const options = computed(() => store.state.kvo.departments);
+    const getOptions = async () => {
       try {
-        await axios
-          .get("http://raul.2apps.ru/json/subdivision.json")
-          .then(response =>{
-            if(response.data.length > 0)options.value=response.data;else options.value=null;
-          })
-
-      }catch (e) {throw e}
-      finally{}
-    }
-    getOptions()
+        store.commit("kvo/setLoading", true);
+        await store.dispatch("kvo/getDepatments");
+        // await axios
+        //   .get("http://raul.2apps.ru/json/subdivision.json")
+        //   .then(response =>{
+        //     if(response.data.length > 0)options.value=response.data;else options.value=null;
+        //   })
+      } catch (e) {
+        throw e;
+      } finally {
+        store.commit("kvo/setLoading", false);
+      }
+    };
+    getOptions();
     const choice = (e) => {
       option.value = e.srcElement.innerText;
       popup.value = false;
@@ -204,25 +209,25 @@ export default {
     const files = ref([]);
     const fileSelect = async (e) => {
       // file.value = e.target.files[0]
-      console.log(e.target.files[0]);
+      console.log(typeof e.target.files[0]);
       files.value.push(e.target.files[0]);
-      let formData = new FormData();
-      formData.append("file", e.target.files[0]);
-      await axios
-        .post("http://raul.2apps.ru/uploads/index.php", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then(function () {
-          console.log("SUCCESS!!");
-        })
-        .catch(function (e) {
-          console.log(e);
-          console.log("FAILURE!!");
-        });
+      // let formData = new FormData();
+      // formData.append("file", e.target.files[0]);
+      // await axios
+      //   .post("http://raul.2apps.ru/uploads/index.php", formData, {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   })
+      //   .then(function () {
+      //     console.log("SUCCESS!!");
+      //   })
+      //   .catch(function (e) {
+      //     console.log(e);
+      //     console.log("FAILURE!!");
+      //   });
     };
-    
+
     const onRemoveFile = (index) => {
       console.log(index);
       files.value.splice(index, 1);
@@ -247,7 +252,7 @@ export default {
 
       choice,
       option,
-      options ,
+      options,
 
       popup,
       width,

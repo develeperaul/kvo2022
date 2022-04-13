@@ -2,52 +2,52 @@
   <q-page>
     <h1 class="message__title">Сообщения</h1>
     <div class="links">
-      <div @click="()=>messageType='New'" class="link_space nav"  :class="messageType=='New'?'nav_active':''">Новые</div>
-      <div @click="()=>messageType='Read'" class="link_space nav" :class="messageType=='Read'?'nav_active':''">Прочитанные</div> 
+      <div
+        @click="() => (messageType = 'New')"
+        class="link_space nav"
+        :class="messageType == 'New' ? 'nav_active' : ''"
+      >
+        Новые
+      </div>
+      <div
+        @click="() => (messageType = 'Read')"
+        class="link_space nav"
+        :class="messageType == 'Read' ? 'nav_active' : ''"
+      >
+        Прочитанные
+      </div>
     </div>
-    <component :is="messageType" v-bind="{messages}"></component>
+    <component :is="messageType" v-bind="{ messages }"></component>
   </q-page>
 </template>
 
 <script>
 import Empty from "src/components/EmptyComponent.vue";
-import New from "src/components/Message/MessageNew.vue"
-import Read from "src/components/Message/MessageRead.vue"
-import axios from 'axios';
+import New from "src/components/Message/MessageNew.vue";
+import Read from "src/components/Message/MessageRead.vue";
 export default {
   // name: 'PageName',
   components: {
     Empty,
     New,
-    Read
+    Read,
   },
-  data: ()=>{
+  data: () => {
     return {
-      messagesNew:null,
-      messagesRead:null,
-      messageType: 'New'
-    }
+      messagesNew: null,
+      messagesRead: null,
+      messageType: "New",
+    };
   },
   computed: {
-    messages(){
-      return this.messageType == 'New'?this.messagesNew:this.messageType == 'Read'?this.messagesRead:null
-    }
+    messages() {
+      return this.messageType == "New"
+        ? this.messagesNew
+        : this.messageType == "Read"
+        ? this.messagesRead
+        : null;
+    },
   },
-  methods: {
-    async getMessage(){
-      try{
-        await axios
-          .get("http://raul.2apps.ru/json/messages.json")
-          .then(response=>{
-            if(response.data.length>0)this.messagesNew=response.data;else this.messagesNew = null;
-            console.log(this.messagesNew)
-          })
-      }catch(e){throw e}finally{}
-    }
-  },
-  mounted(){
-    this.getMessage()
-  }
 };
 </script>
 <style lang="scss" scoped>
@@ -55,7 +55,6 @@ export default {
   &__title {
     padding-bottom: 30px;
   }
-  
 }
 .links {
   display: flex;
@@ -79,5 +78,4 @@ export default {
   color: $secondary;
   border-color: $secondary;
 }
-
 </style>

@@ -1,7 +1,8 @@
 import { store } from "quasar/wrappers";
 import { createStore } from "vuex";
 import auth from "./auth";
-import kvo from './kvo'
+import kvo from "./kvo";
+import messages from "./messages";
 
 /*
  * If not building with SSR mode, you can
@@ -16,7 +17,8 @@ export default store(function (/* { ssrContext } */) {
   const Store = createStore({
     modules: {
       auth,
-      kvo
+      kvo,
+      messages,
     },
 
     // enable strict mode (adds overhead!)

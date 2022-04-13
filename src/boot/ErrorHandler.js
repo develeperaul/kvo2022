@@ -4,9 +4,10 @@ import { Notify } from "quasar";
 async function handler(err, router) {
   if (err instanceof HTTPError) {
     const { message } = await err.response.json();
-    if (err.response.status === 401) {
-      return router.push({ name: "common.login" });
-    }
+    // if (err.response.status === 401) {
+    //   // return router.push({ name: "auth" });
+    // }
+    // console.log(router);
     console.log(message);
     Notify.create({
       type: "negative",

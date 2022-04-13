@@ -15,7 +15,7 @@
     <q-footer class="footer__nav" style="background-color: white">
       <NavLink name="create" :exact="true" />
       <NavLink name="history" />
-      <NavLink name="messages" />
+      <NavLink name="messages" :isNotification="isNotification" />
     </q-footer>
     <q-page-container>
       <router-view />
@@ -73,7 +73,7 @@ const linksList = [
   },
 ];
 
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 
 export default defineComponent({
   name: "MainLayout",
@@ -93,6 +93,7 @@ export default defineComponent({
       router.push({ name: "auth" });
     };
     return {
+      isNotification: computed(() => store.getters["messages/isNotification"]),
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer() {

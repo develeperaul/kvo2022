@@ -16,7 +16,7 @@
     >
       {{ itemName }}
     </span>
-    <span v-if="name == 'messages'" class="notification"></span>
+    <span v-if="isNotification" class="notification"></span>
   </router-link>
 </template>
 <script>
@@ -35,6 +35,10 @@ export default {
     exact: {
       type: Boolean,
       require: false,
+      default: false,
+    },
+    isNotification: {
+      type: Boolean,
       default: false,
     },
   },

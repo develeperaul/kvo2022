@@ -6,17 +6,16 @@ import {
   createWebHashHistory,
 } from "vue-router";
 import routes from "./routes";
-
-/*
- * If not building with SSR mode, you can
- * directly export the Router instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Router instance.
- */
-
+import { api } from "src/api/helper/ky";
+import { cleanTokensData } from "src/api/helper/tokens";
 export default route(function (/* { store, ssrContext } */) {
+  function registrHandlers(api, next) {
+    api.registrHandleRejectionToken(() => {
+      cleanTokensData();
+      console.log(Router);
+      return Router.replace({ name: "auth" });
+    });
+  }
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : process.env.VUE_ROUTER_MODE === "history"
@@ -36,15 +35,16 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach((to, from, next) => {
-    if (to.matched.some((r) => r.meta.auth)) {
-      if (
-        localStorage.getItem("auth") == null ||
-        !localStorage.getItem("auth")
-      ) {
-        next({ name: "auth" });
-      }
-    }
-    next();
+    registrHandlers(api, next);
+    // if (to.matched.some((r) => r.meta.auth)) {
+    //   if (
+    //     localStorage.getItem("auth") == null ||
+    //     !localStorage.getItem("auth")
+    //   ) {
+    //     return next({ name: "auth", replace: true });
+    //   }
+    // }
+    return next();
   });
 
   return Router;

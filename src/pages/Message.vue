@@ -54,10 +54,23 @@
 
 <script>
 import Header from "src/components/HeaderDrawer.vue";
+import { onMounted, onUnmounted, computed } from "vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 export default {
   // name: 'PageName',
   components: {
     Header,
+  },
+  setup() {
+    const store = useStore();
+    const route = useRoute();
+    const message = computed(() => store.state.messages.item);
+    onMounted(() => store.dispatch("messages/getMessage", route.params.id));
+    onUnmounted(() => store.commit("messages/setMessage", null));
+    return {
+      message,
+    };
   },
 };
 </script>

@@ -1,22 +1,22 @@
 <template>
-  <span class="status" :class="`status-${bg}`">{{statusList[bg]}}</span>
+  <span class="status" :class="`status-${bg}`">{{ statusList[bg] }}</span>
 </template>
 
 <script>
-import {statusNameList} from "src/helper/statusNameList"
+import { statusNameList } from "src/helper/statusNameList";
 export default {
   name: "base-status",
   props: {
     bg: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
   },
-  data: ()=>{
+  data: () => {
     return {
-      statusList:statusNameList
-    } 
-  }
+      statusList: statusNameList,
+    };
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -27,22 +27,26 @@ export default {
   font-size: 14px;
   line-height: 18px;
   color: #ffffff;
-  &-at_work_overdue {
-    background-color: $negative;
-  }
-  &-eliminated {
-    background-color: $positive;
-  }
-  &-at_work {
-    background-color: $warning;
-  }
-  &-sent_for_processing {
+  &-1 {
     background-color: $purple;
   }
+  &-2 {
+    background-color: $warning;
+  }
+  &-3 {
+    background-color: $negative;
+  }
+  &-4 {
+    background-color: $positive;
+  }
 
-  &-fixed_out_of_time {
+  &-5 {
     background-color: $billet;
     color: $accent;
+  }
+  &-6 {
+    background-color: transparent;
+    color: $negative;
   }
 }
 </style>

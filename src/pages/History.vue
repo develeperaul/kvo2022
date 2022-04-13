@@ -1,16 +1,29 @@
 <template>
   <q-page padding>
     <h1 class="history__title">История поданных КВО</h1>
-    <div v-for="item in list" :key="item.id" class="application">
-      <div class="application__top tw-flex tw-justify-between">
-        <base-status
-          :bg="item.status"
-          @click="() => $router.push({ name: 'item', params: { id: item.id } })"
-        />
-        <span class="application__number">{{item.title}}</span>
+    <div v-if="loading">
+      <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+    </div>
+    <div v-else ref="scrollComponent">
+      <div v-for="item in list" :key="item.id" class="application">
+        <div class="application__top tw-flex tw-justify-between">
+          <base-status
+            v-if="item.status?.value"
+            :bg="item.status.value"
+            @click="
+              () => $router.push({ name: 'item', params: { id: item.id } })
+            "
+          />
+          <span class="application__number">№{{ item.id }}</span>
+        </div>
+        <div class="application__bottom">
+          <p class="application__text" v-if="item.department?.name">
+            {{ item.department.name }}
+          </p>
+        </div>
       </div>
-      <div class="application__bottom">
-        <p class="application__text">{{item.division}}</p>
+      <div v-if="scrollLoading">
+        <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
       </div>
     </div>
   </q-page>
@@ -28,40 +41,38 @@
 
 <script>
 import Empty from "src/components/EmptyComponent.vue";
-import axios from 'axios';
 
-import {createNamespacedHelpers } from "vuex"
-const {mapState, mapGetters} = createNamespacedHelpers('kvo')
+import { onMounted, computed } from "vue";
+import { useStore } from "vuex";
+import useInfiniteScroll from "src/composition/useInfiniteScroll";
 export default {
   // name: 'PageName',
   components: {
     Empty,
   },
-  data: ()=>{
-    return {
-      
-    }
-  },
-  computed: {
-       ...mapState(['loading', 'list'])
-  },
-  methods: {
-    async getKvo(){
+  setup() {
+    const objParams = {
+      nameSpace: "kvo",
+      paginateList: (current) =>
+        store.dispatch("kvo/getKVOListPaginate", current + 1),
+    };
+    const { scrollComponent, scrollLoading } = useInfiniteScroll(objParams);
+    const store = useStore();
+    const list = computed(() => store.state.kvo.list);
+    const loading = computed(() => store.state.kvo.loading);
+    const getKvo = async () => {
       try {
-        this.$store.commit("kvo/setLoading", true)
-        await axios("http://raul.2apps.ru/json/history.json")
-          .then(response=>this.$store.commit("kvo/setList", response.data))
-      }catch (e) {
-        throw e
-      } finally{
-        this.$store.commit("kvo/setLoading", false)
+        store.commit("kvo/setLoading", true);
+        await store.dispatch("kvo/getKVOList");
+      } catch (e) {
+        throw e;
+      } finally {
+        store.commit("kvo/setLoading", false);
       }
-    }
+    };
+    onMounted(async () => await getKvo());
+    return { list, loading, scrollComponent, scrollLoading };
   },
-  async mounted(){
-    await this.getKvo();
-  }
-
 };
 </script>
 <style lang="scss" scoped>

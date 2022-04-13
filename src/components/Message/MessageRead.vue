@@ -1,55 +1,104 @@
 <template>
-    <div v-if="message">
-      <template v-for="message in messages" :key="message.id">
+  <div v-if="loading">
+    <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+  </div>
+  <div v-else>
+    <div v-if="list && list.length > 0" ref="scrollComponent">
+      <div v-for="message in list" :key="message.id">
         <div class="line"></div>
         <div class="message__top">
           <div class="message__left">
-            
-            <base-icons v-if="message.value" :name="message.value" class="message__status_space-right"/>
-            <h4 class="message__status ">
-              {{message.title}}
-            </h4>
+            <base-icons
+              v-if="message.value"
+              :name="message.value"
+              class="message__status_space-right"
+            />
+            <h4 class="message__status">Изменен статус КВО</h4>
           </div>
           <div class="message__right">
-            <p class="message__time">{{message.date}}</p>
+            <p class="message__time">{{ message.createdAt }}</p>
           </div>
         </div>
         <div class="message__middle">
-          <p class="message__text">{{message.division}}</p>
-          <div class="message__middle-status" v-if="message.value===null">
+          <p class="message__text">{{ message.card.department.name }}</p>
+          <!-- <div class="message__middle-status" v-if="message.value === null">
+          <span>Статус:&nbsp;</span>
+          <base-status :bg="message.status" />
+        </div> -->
+          <div class="message__middle-status">
             <span>Статус:&nbsp;</span>
-            <base-status
-              :bg="message.status"
-            />
-
+            <base-status :bg="message.newStatus.value" />
           </div>
         </div>
         <div class="message__bottom">
           <span
             class="message__bottom_space"
-            @click="() => $router.push({ name: 'message', params: { id: 1 } })"
+            @click="
+              () =>
+                $router.push({ name: 'message', params: { id: message.id } })
+            "
             >Посмотреть данные</span
           >
-          <span>Прочитано</span>
+        </div>
       </div>
-      </template>
+      <div v-if="scrollLoading">
+        <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+      </div>
     </div>
     <div class="message__nothing" v-else>
       <p>У Вас нет прочитанных сообщений</p>
     </div>
-    
+  </div>
 </template>
 
 <script>
+import { useStore } from "vuex";
+import { computed, onMounted } from "vue";
+import useInfiniteScroll from "src/composition/useInfiniteScroll";
 export default {
-  name: 'Read',
-  props:{
+  name: "Read",
+  props: {
     messages: {
-      type: [Array,null],
+      type: [Array, null],
       required: true,
-    }
-  }
-}
+    },
+  },
+  setup() {
+    // getMessagesPaginate
+    const store = useStore();
+    const objParams = {
+      nameSpace: "messages",
+      paginateList: (current) =>
+        store.dispatch("messages/getMessagesPaginate", {
+          page: current + 1,
+          isRead: 1,
+        }),
+    };
+    const { scrollComponent, scrollLoading } = useInfiniteScroll(objParams);
+    const list = computed(
+      () => store.getters["messages/listReadUpdateDateTime"]
+    );
+
+    const getMessages = async () => {
+      try {
+        store.commit("messages/setLoading", true);
+        const isRead = 1;
+        await store.dispatch("messages/getMessages", isRead);
+      } catch (e) {
+        throw e;
+      } finally {
+        store.commit("messages/setLoading", false);
+      }
+    };
+    onMounted(async () => (list.value === null ? await getMessages() : null));
+    return {
+      list,
+      scrollComponent,
+      scrollLoading,
+      loading: computed(() => store.state.messages.loading),
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 .line {
@@ -95,7 +144,6 @@ export default {
     font-size: 14px;
     line-height: 18px;
     color: $accent;
-    
   }
   &__middle-status {
     padding-top: 20px;

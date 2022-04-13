@@ -18,9 +18,11 @@
     </div>
     <div class="options__top_line"></div>
     <div class="opiton_list p-content">
-      <div class="option_item item" >
+      <div class="option_item item">
         <template v-for="item in options" :key="item.id">
-          <h3 class="item__title" @click="choice($event, item.id)">{{item.title}}</h3>
+          <h3 class="item__title" @click="choice($event, item.id)">
+            {{ item.name }}
+          </h3>
           <div class="options__item_line"></div>
         </template>
       </div>
@@ -50,9 +52,9 @@ export default {
       default: false,
     },
     options: {
-      type: [Array, null], 
-      required: true
-    }
+      type: [Array, null],
+      required: true,
+    },
   },
   inheritAttrs: false,
   setup(props, { emit }) {
@@ -64,14 +66,14 @@ export default {
     updateWidth();
 
     const option = ref(null);
-    const choice = (e,id) => {
+    const choice = (e, id) => {
       // option.value = {title:e.srcElement.innerText, id};
-      option.value = e.srcElement.innerText
+      option.value = e.srcElement.innerText;
       emit("update:modelValue", id);
       popup.value = false;
     };
     watch(option, () => {
-      const title = option.value.title
+      const title = option.value.name;
       // emit("update:modelValue", 'hi');
     });
     return {

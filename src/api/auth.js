@@ -1,4 +1,4 @@
-import { serverAPI } from "src/api/helper/ky";
+import { authAPI } from "src/api/helper/ky";
 export function user({ login, password }) {
   if (login == "test" && password == "123456") {
     return {
@@ -11,6 +11,6 @@ export function user({ login, password }) {
 }
 
 export const auth = (data) => {
-  console.log(data);
-  return serverAPI.post("auth/login", { json: data }).json();
+  console.log(authAPI);
+  return authAPI.post("auth/login", { json: data }).json();
 };
