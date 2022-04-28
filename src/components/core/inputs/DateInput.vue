@@ -1,8 +1,10 @@
 <template>
   <base-input
     v-bind="{ placeholder, error }"
-    @focus="popup = true"
+    @focus="focused = true"
+    @blur="focused = false"
     v-model="date"
+    mask="####-##-##"
     @update:model-value="(e) => $emit('update:modelValue', e)"
   >
     <base-icons
@@ -17,7 +19,7 @@
       @hide="popup = false"
     >
       <q-date
-        v-model="modelValue"
+        v-model="date"
         color="secondary"
         :options="optionsFn"
         :locale="myLocale"
@@ -54,6 +56,7 @@ export default {
   inheritAttrs: false,
   setup(props, { emit }) {
     const popup = ref(false);
+    const focused = ref(false);
     const myLocale = {
       /* starting with Sunday */
       days: "Восскресенье_Понедельник_Вторник_Среда_Четверг_Пятница_Суббота".split(
@@ -72,15 +75,22 @@ export default {
     const date = ref("");
     watch(
       () => props.modelValue,
-      (first, second) => {
+      (val) => {
         date.value = props.modelValue;
+        emit("update:modelValue", val);
 
-        if (!popup.value) {
-          popup.value = true;
-          emit("update:modelValue", second);
-        } else {
-          emit("update:modelValue", first);
-        }
+        // if (!popup.value) {
+        //   // popup.value = true;
+        // } else {
+        //   emit("update:modelValue", first);
+        // }
+      }
+    );
+    watch(
+      () => date.value,
+      (val) => {
+        emit("update:modelValue", val);
+        // if (val) popup.value = true;
       }
     );
     return {
@@ -90,6 +100,7 @@ export default {
       myLocale,
       date,
       popup,
+      focused,
     };
   },
 };

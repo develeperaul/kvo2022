@@ -76,6 +76,12 @@ export default {
       const title = option.value.name;
       // emit("update:modelValue", 'hi');
     });
+    watch(
+      () => props.modelValue,
+      (val) => {
+        if (!val) option.value = "";
+      }
+    );
     return {
       popup,
       width,

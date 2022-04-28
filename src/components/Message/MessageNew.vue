@@ -1,6 +1,6 @@
 <template>
   <div v-if="loading">
-    <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+    <img src="spinner.svg" alt="" class="tw-mx-auto" />
   </div>
   <template v-else>
     <div v-if="list && list.length > 0" ref="scrollComponent">
@@ -47,7 +47,7 @@
         </div>
       </div>
       <div v-if="scrollLoading">
-        <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+        <img src="spinner.svg" alt="" class="tw-mx-auto" />
       </div>
     </div>
     <div class="message__nothing" v-else>

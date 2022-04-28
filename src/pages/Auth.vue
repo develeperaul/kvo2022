@@ -36,7 +36,7 @@
     <base-button v-if="!loading" type="submit"> Войти </base-button>
     <base-button v-else>
       <template #loading>
-        <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+        <img src="spinner.svg" alt="" class="tw-mx-auto" />
       </template>
     </base-button>
   </form>
@@ -68,8 +68,8 @@ export default {
     const schema = yup.object({
       login: yup
         .string()
-        .required("Поле Login обзяательно для заполнения")
-        .matches(/^[A-zА-яЁё]+$/i, "введите только буквы")
+        .required("Поле Логин обзяательно для заполнения")
+        .matches(/^[A-zА-яЁё]+$/i, "Введите только буквы")
         .label("Login"),
       password: yup.string().required("Поле Пароль обзятельно для заполнения"),
     });

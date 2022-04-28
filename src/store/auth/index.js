@@ -1,5 +1,6 @@
 import { user, auth } from "src/api/auth";
 import * as Tokens from "src/api/helper/tokens";
+const storage = window.localStorage;
 export default {
   namespaced: true,
   state: () => ({
@@ -11,11 +12,11 @@ export default {
   mutations: {
     login(state, res) {
       if (res.token) {
-        localStorage.setItem("auth", true);
-        const auth = localStorage.getItem("auth");
+        storage.setItem("auth", true);
+        const auth = storage.getItem("auth");
         if (auth) {
           try {
-            state.auth = JSON.parse(localStorage.getItem("auth"));
+            state.auth = JSON.parse(storage.getItem("auth"));
             state.token = res.token;
             state.name = res.name;
             state.last_name = res.last_name;
@@ -26,8 +27,11 @@ export default {
             state.last_name = null;
           }
         }
-      } else {
-        localStorage.removeItem("auth");
+      }
+      if (!res) {
+        console.log(res);
+        Tokens.cleanTokensData();
+        storage.removeItem("auth");
         state.auth = false;
       }
     },

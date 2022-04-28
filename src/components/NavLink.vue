@@ -22,7 +22,7 @@
 <script>
 import { computed } from "vue";
 const navList = [
-  { create: "Создать" },
+  { create: "Подать КВО" },
   { history: "История" },
   { messages: "Сообщения" },
 ];

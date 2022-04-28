@@ -6,6 +6,14 @@
       <h3 class="info__title">Название:</h3>
       <p class="info__text">№{{ item.id }}</p>
     </div>
+    <div class="reason" v-if="item.rejectionComment?.length > 0">
+      <div class="p-content">
+        <h3 class="reason__title">Причина отклонения:</h3>
+        <p class="reason__text">
+          {{ item.rejectionComment }}
+        </p>
+      </div>
+    </div>
     <div class="info">
       <h3 class="info__title">Дата подачи:</h3>
       <p class="info__text">{{ createDateTime }}</p>
@@ -32,7 +40,7 @@
         {{ item.actionsTakenToResolve }}
       </p>
     </div>
-    <div class="info">
+    <div class="info" v-if="item.files && item.files?.length > 0">
       <h3 class="info__title">Вложения:</h3>
       <p class="info__text" v-for="(file, index) in item.files" :key="index">
         {{ file.originalName }}
@@ -42,7 +50,7 @@
       <h3 class="info__title">Статус:</h3>
       <p class="info__text">{{ statusList[item.status.value] }}</p>
     </div>
-    <div class="info">
+    <div class="info" v-if="item.reviewerComment?.length > 0">
       <h3 class="info__title">Комментарий:</h3>
       <p class="info__text">
         {{ item.reviewerComment }}

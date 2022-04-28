@@ -1,8 +1,8 @@
 import ky from "ky";
 import * as Tokens from "./tokens";
 const createObj = {
-  prefixUrl: "http://62.33.236.149/api/v1/",
-  timeout: 20000,
+  prefixUrl: "https://kvo.bngf.ru/api/v1/",
+  timeout: 1500000,
 };
 class ServiceApi {
   constructor() {

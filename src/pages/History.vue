@@ -2,18 +2,17 @@
   <q-page padding>
     <h1 class="history__title">История поданных КВО</h1>
     <div v-if="loading">
-      <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+      <img src="spinner.svg" alt="" class="tw-mx-auto" />
     </div>
     <div v-else ref="scrollComponent">
-      <div v-for="item in list" :key="item.id" class="application">
+      <div
+        v-for="item in list"
+        :key="item.id"
+        class="application"
+        @click="() => $router.push({ name: 'item', params: { id: item.id } })"
+      >
         <div class="application__top tw-flex tw-justify-between">
-          <base-status
-            v-if="item.status?.value"
-            :bg="item.status.value"
-            @click="
-              () => $router.push({ name: 'item', params: { id: item.id } })
-            "
-          />
+          <base-status v-if="item.status?.value" :bg="item.status.value" />
           <span class="application__number">№{{ item.id }}</span>
         </div>
         <div class="application__bottom">
@@ -23,7 +22,7 @@
         </div>
       </div>
       <div v-if="scrollLoading">
-        <img src="/icons/spinner.svg" alt="" class="tw-mx-auto" />
+        <img src="spinner.svg" alt="" class="tw-mx-auto" />
       </div>
     </div>
   </q-page>
@@ -82,7 +81,14 @@ export default {
   }
 }
 .application {
-  padding: 15px 0;
+  &:first-child {
+    margin: 0 -21px 15px -21px;
+  }
+  margin: 15px -21px;
+  padding: 15px 21px;
+
+  box-shadow: 0px 0px 10px rgb(0 0 0 / 12%);
+
   &__top {
     padding-bottom: 20px;
   }

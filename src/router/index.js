@@ -35,15 +35,15 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach((to, from, next) => {
-    registrHandlers(api, next);
-    // if (to.matched.some((r) => r.meta.auth)) {
-    //   if (
-    //     localStorage.getItem("auth") == null ||
-    //     !localStorage.getItem("auth")
-    //   ) {
-    //     return next({ name: "auth", replace: true });
-    //   }
-    // }
+    if (to.matched.some((r) => r.meta.auth)) {
+      if (
+        localStorage.getItem("token") == null ||
+        !localStorage.getItem("token")
+      ) {
+        return next({ name: "auth", replace: true });
+      }
+      registrHandlers(api, next);
+    }
     return next();
   });
 

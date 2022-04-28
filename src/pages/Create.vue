@@ -1,6 +1,6 @@
 <template>
   <q-page class="create-page">
-    <h1 class="create__title">Создайте новую КВО</h1>
+    <h1 class="create__title">Новая КВО</h1>
     <form @submit="onSubmit">
       <div class="field">
         <label class="field__label" for="">Дата обнаружения опасности:</label>
@@ -62,9 +62,12 @@
 
         <div class="upload">
           <div v-for="(file, index) in files" :key="index" class="upload__item">
-            <span>
-              {{ file.name }}
-            </span>
+            <div class="upload__item-wrapper">
+              <span>
+                {{ file.name }}
+              </span>
+            </div>
+
             <q-icon
               class="close"
               size="28px"
@@ -72,7 +75,7 @@
               @click="onRemoveFile(index)"
             ></q-icon>
           </div>
-          <button
+          <!-- <button
             @click="$refs.uploadFile.click()"
             class="upload__btn"
             v-if="files.length == 0"
@@ -80,10 +83,18 @@
           >
             <base-icons name="upload" />
             <span class="upload__text"> Прикрепить файл </span>
+          </button> -->
+          <button
+            @click="upload"
+            class="upload__btn"
+            type="button"
+            v-if="files.length == 0"
+          >
+            <base-icons name="upload" />
+            <span class="upload__text"> Прикрепить файл </span>
           </button>
-
           <base-button
-            @click="$refs.uploadFile.click()"
+            @click="upload"
             v-bind="{ py: 'md', color: 'secondary-l' }"
             v-else
           >
@@ -91,8 +102,12 @@
           </base-button>
         </div>
       </div>
-
-      <base-button type="submit"> Создать </base-button>
+      <base-button v-if="!loading" type="submit"> Отправить </base-button>
+      <base-button v-else>
+        <template #loading>
+          <img src="spinner.svg" alt="" class="tw-mx-auto" />
+        </template>
+      </base-button>
     </form>
   </q-page>
 </template>
@@ -101,12 +116,16 @@
 import { ref, computed } from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import BaseIcons from "src/components/core/BaseIcons.vue";
 import BaseButton from "src/components/core/BaseButton.vue";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import { setLocale } from "yup";
 import BaseSelect from "src/components/core/selects/BaseSelect.vue";
+import { Notify } from "quasar";
+import { Camera, CameraResultType } from "@capacitor/camera";
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 
 setLocale({
   mixed: {
@@ -118,6 +137,7 @@ export default {
   components: { BaseIcons, BaseButton, BaseSelect },
   // name: 'PageName',
   setup() {
+    const router = useRouter();
     const schema = yup.object({
       date: yup.string().required(),
       subdivision: yup.string().required(),
@@ -135,6 +155,7 @@ export default {
     const { value: danger, errorMessage: dangerError } = useField("danger");
     const { value: measures, errorMessage: measuresError } =
       useField("measures");
+    const loading = ref(false);
 
     const onSubmit = handleSubmit((values) => {
       console.log("values");
@@ -151,12 +172,22 @@ export default {
       formData.append("isAnonymous", anonim.value ? 1 : 0);
       files.value.forEach((file) => formData.append("files[]", file));
       try {
+        loading.value = true;
         store.commit("kvo/setLoading", true);
         await store.dispatch("kvo/createKVO", formData);
+        files.value = [];
+        resetForm();
+        router.push({ name: "history" });
+        Notify.create({
+          type: "positive",
+          message: `КВО создано.`,
+          timeout: 1500,
+          position: "top",
+        });
       } catch (e) {
         throw e;
       } finally {
-        resetForm();
+        loading.value = false;
         // date.value = null;
         // date.value = null;
         // date.value = null;
@@ -208,9 +239,22 @@ export default {
 
     const files = ref([]);
     const fileSelect = async (e) => {
-      // file.value = e.target.files[0]
-      console.log(typeof e.target.files[0]);
+      console.log(e.target.files[0]);
       files.value.push(e.target.files[0]);
+      // navigator.camera.getPicture(
+      //   () => {
+      //     (data) => {
+      //       console.log(data);
+      //     };
+      //     // files.value.push(e.target.files[0]);
+      //   },
+      //   () => {},
+      //   {
+      //     destinationType: 0,
+      //     SourceType: "PHOTOLIBRARY",
+      //   }
+      // );
+      // file.value = e.target.files[0]
       // let formData = new FormData();
       // formData.append("file", e.target.files[0]);
       // await axios
@@ -226,6 +270,24 @@ export default {
       //     console.log(e);
       //     console.log("FAILURE!!");
       //   });
+    };
+    const upload = async () => {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.Uri,
+        promptLabelPhoto: "Выбрать из хранилища",
+        promptLabelPicture: "Сделать фото",
+        allowEditing: false,
+      });
+
+      let blob = await fetch(image.webPath).then((r) => r.blob());
+      let f = new File([blob], `${image.webPath.split("/").pop()}`, {
+        type: `image/${image.format}`,
+      });
+      files.value.push(f);
+      console.log(f);
+      console.log(files.value);
     };
 
     const onRemoveFile = (index) => {
@@ -246,6 +308,7 @@ export default {
       subdivisionError,
       onSubmit,
 
+      upload,
       anonim,
 
       blurDate,
@@ -261,6 +324,8 @@ export default {
       files,
       fileSelect,
       onRemoveFile,
+
+      loading,
     };
   },
 };
@@ -309,10 +374,21 @@ export default {
     background: $billet;
     border-radius: 4px;
     padding: 5px 10px;
+    padding-right: 33px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 15px;
+    position: relative;
+    &-wrapper {
+      overflow-x: hidden;
+    }
+    & .close {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
     & span {
       color: $accent;
       font-size: 16px;
