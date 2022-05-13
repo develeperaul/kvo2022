@@ -27,6 +27,7 @@ export default {
   font-size: 14px;
   line-height: 18px;
   color: #ffffff;
+  white-space: nowrap;
   &-1 {
     background-color: $purple;
   }
@@ -45,8 +46,11 @@ export default {
     color: $accent;
   }
   &-6 {
-    background-color: transparent;
-    color: $negative;
+    background-color: $negative;
+  }
+
+  &-7 {
+    background-color: $orange;
   }
 }
 </style>

@@ -39,6 +39,7 @@
 }
 .info {
   padding-bottom: 25px;
+  word-break: break-word;
 }
 .info__title {
   color: $accent;
@@ -54,6 +55,9 @@
 .info__text {
   font-size: 16px;
   line-height: 21px;
+  &:not(:last-child) {
+    margin-bottom: 7px;
+  }
 }
 
 .close {

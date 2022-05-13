@@ -8,27 +8,11 @@ async function handler(err, router) {
     //   // return router.push({ name: "auth" });
     // }
     // console.log(router);
-    if (err.response?.status === 503) {
-      Notify.create({
-        type: "negative",
-        message: `Cервис недоступен.`,
-        timeout: 1000,
-      });
-    } else {
       Notify.create({
         type: "negative",
         message,
       });
-    }
-
-    if (err.response?.status === 500) {
-      Notify.create({
-        type: "negative",
-        message: `Сервер не отвечает.`,
-        timeout: 1500,
-        position: "top-left",
-      });
-    }
+    
   }
 
   if (err instanceof TimeoutError) {

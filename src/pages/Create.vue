@@ -125,7 +125,7 @@ import { setLocale } from "yup";
 import BaseSelect from "src/components/core/selects/BaseSelect.vue";
 import { Notify } from "quasar";
 import { Camera, CameraResultType } from "@capacitor/camera";
-import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
+// import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 
 setLocale({
   mixed: {
@@ -180,7 +180,7 @@ export default {
         router.push({ name: "history" });
         Notify.create({
           type: "positive",
-          message: `КВО создано.`,
+          message: `КВО отправлена.`,
           timeout: 1500,
           position: "top",
         });

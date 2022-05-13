@@ -1,8 +1,8 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="p-content">
     <q-header style="background-color: white">
-      <q-toolbar class="tw-flex tw-justify-between">
-        <div></div>
+      <q-toolbar class="tw-flex tw-justify-between tw-gap-4">
+        <p class="user-name">{{$store.getters["auth/userName"]}}</p>
         <q-img
           src="logout.svg"
           width="25px"
@@ -111,5 +111,9 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.05);
+}
+.user-name {
+  font-size: 16px;color: #000; overflow-x: hidden;white-space: nowrap;
+  padding-left: 8px;
 }
 </style>

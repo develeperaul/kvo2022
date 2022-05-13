@@ -8,10 +8,12 @@ import {
 import routes from "./routes";
 import { api } from "src/api/helper/ky";
 import { cleanTokensData } from "src/api/helper/tokens";
+const storage = window.localStorage;
 export default route(function (/* { store, ssrContext } */) {
   function registrHandlers(api, next) {
     api.registrHandleRejectionToken(() => {
       cleanTokensData();
+      storage.removeItem("userName");
       console.log(Router);
       return Router.replace({ name: "auth" });
     });

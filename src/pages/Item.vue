@@ -1,56 +1,60 @@
 <template>
   <Header name="Данные КВО" style="margin-bottom: 20px" to="history" />
   <div v-if="loading">loading...</div>
-  <div class="p-content" v-if="item">
-    <div class="info">
+  <div class="" v-if="item">
+    <div class="info p-content">
       <h3 class="info__title">Название:</h3>
-      <p class="info__text">№{{ item.id }}</p>
+      <p class="info__text">{{ item.name ? item.name : `№${item.id}` }}</p>
     </div>
     <div class="reason" v-if="item.rejectionComment?.length > 0">
       <div class="p-content">
         <h3 class="reason__title">Причина отклонения:</h3>
         <p class="reason__text">
-          {{ item.rejectionComment }}
+          {{ item?.rejectionComment }}
         </p>
       </div>
     </div>
-    <div class="info">
+    <div class="info p-content">
       <h3 class="info__title">Дата подачи:</h3>
       <p class="info__text">{{ createDateTime }}</p>
     </div>
-    <div class="info">
+    <div class="info p-content" v-if="item?.incidentDate">
+      <h3 class="info__title">Дата инцидента:</h3>
+      <p class="info__text">{{ item.incidentDate }}</p>
+    </div>
+    <div class="info p-content">
       <h3 class="info__title">Структурное подразделение:</h3>
       <p class="info__text">{{ item.department.name }}</p>
     </div>
-    <div class="info">
+    <div class="info p-content">
       <h3 class="info__title">Место обнаружения опасности:</h3>
       <p class="info__text">
         {{ item.locationName }}
       </p>
     </div>
-    <div class="info">
+    <div class="info p-content">
       <h3 class="info__title">Опасное действие/условие:</h3>
       <p class="info__text">
         {{ item.incidentDescription }}
       </p>
     </div>
-    <div class="info">
+    <div class="info p-content">
       <h3 class="info__title">Меры предприняты/предложены:</h3>
       <p class="info__text">
         {{ item.actionsTakenToResolve }}
       </p>
     </div>
-    <div class="info" v-if="item.files && item.files?.length > 0">
+    <div class="info p-content" v-if="item.files && item.files?.length > 0">
       <h3 class="info__title">Вложения:</h3>
       <p class="info__text" v-for="(file, index) in item.files" :key="index">
         {{ file.originalName }}
       </p>
     </div>
-    <div class="info">
+    <div class="info p-content">
       <h3 class="info__title">Статус:</h3>
       <p class="info__text">{{ statusList[item.status.value] }}</p>
     </div>
-    <div class="info" v-if="item.reviewerComment?.length > 0">
+    <div class="info p-content" v-if="item.reviewerComment?.length > 0">
       <h3 class="info__title">Комментарий:</h3>
       <p class="info__text">
         {{ item.reviewerComment }}

@@ -16,6 +16,7 @@ function isTokenExpired() {
 
 function cleanTokensData() {
   storage.removeItem("token");
+  
 }
 
 export { setTokensData, getAccessToken, cleanTokensData, isTokenExpired };

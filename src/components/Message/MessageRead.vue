@@ -20,6 +20,11 @@
           </div>
         </div>
         <div class="message__middle">
+          <div class="message__middle-name">
+            <span>Название:&nbsp;</span>
+            <b>{{message.card?.name?message.card.name:`№${message.card.department.id}`}}</b>
+          </div>
+        
           <p class="message__text">{{ message.card.department.name }}</p>
           <!-- <div class="message__middle-status" v-if="message.value === null">
           <span>Статус:&nbsp;</span>
@@ -33,10 +38,8 @@
         <div class="message__bottom">
           <span
             class="message__bottom_space"
-            @click="
-              () =>
-                $router.push({ name: 'message', params: { id: message.id } })
-            "
+            
+            @click="() => $router.push({ name: 'item', params: { id: message.card.id } })"
             >Посмотреть данные</span
           >
         </div>
@@ -138,7 +141,7 @@ export default {
     font-size: 12px;
     line-height: 16px;
     color: $accent;
-    padding-top: 10px;
+    // padding-top: 10px;
   }
   &__text {
     font-size: 14px;
@@ -147,6 +150,10 @@ export default {
   }
   &__middle-status {
     padding-top: 20px;
+  }
+  &__middle-name {
+    padding-bottom: 20px;
+    word-break: break-all;
   }
   &__bottom {
     color: $secondary;
