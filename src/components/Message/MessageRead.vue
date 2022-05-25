@@ -22,10 +22,14 @@
         <div class="message__middle">
           <div class="message__middle-name">
             <span>Название:&nbsp;</span>
-            <b>{{message.card?.name?message.card.name:`№${message.card.department.id}`}}</b>
+            <b>{{
+              message.card?.name
+                ? message.card.name
+                : `№${message.card.department?.id}`
+            }}</b>
           </div>
-        
-          <p class="message__text">{{ message.card.department.name }}</p>
+
+          <p class="message__text">{{ message.card.department?.name }}</p>
           <!-- <div class="message__middle-status" v-if="message.value === null">
           <span>Статус:&nbsp;</span>
           <base-status :bg="message.status" />
@@ -38,8 +42,10 @@
         <div class="message__bottom">
           <span
             class="message__bottom_space"
-            
-            @click="() => $router.push({ name: 'item', params: { id: message.card.id } })"
+            @click="
+              () =>
+                $router.push({ name: 'item', params: { id: message.card.id } })
+            "
             >Посмотреть данные</span
           >
         </div>
@@ -93,7 +99,7 @@ export default {
         store.commit("messages/setLoading", false);
       }
     };
-    onMounted(async () => (list.value === null ? await getMessages() : null));
+    onMounted(async () => await getMessages());
     return {
       list,
       scrollComponent,

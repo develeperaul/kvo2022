@@ -11,21 +11,22 @@ export default {
   }),
   mutations: {
     login(state, res) {
-      if(res){
-        const { firstName, lastName} = res
-        storage.setItem('userName', `${lastName} ${firstName}`)
-        state.name = firstName
-        state.last_name = lastName
-      }else {
-        state.name = null
-        state.last_name = null
+      if (res) {
+        const { firstName, lastName } = res;
+        storage.setItem("userName", `${lastName} ${firstName}`);
+        state.name = firstName;
+        state.last_name = lastName;
+      } else {
+        state.name = null;
+        state.last_name = null;
+        storage.removeItem("userName");
+        Tokens.cleanTokensData();
       }
-//         companyName: "Тестовая организация"
-// departmentName: "Тестовый отдел"
-// firstName: "ldap_kvo"
-// jobTitle: "Тестовая должность"
-// lastName: "Фамилия"
-        
+      //         companyName: "Тестовая организация"
+      // departmentName: "Тестовый отдел"
+      // firstName: "ldap_kvo"
+      // jobTitle: "Тестовая должность"
+      // lastName: "Фамилия"
     },
   },
 
@@ -41,19 +42,19 @@ export default {
         last_name,
       };
     },
-    
+
     userName(state) {
       const { name, last_name } = state;
-      console.log(state?.name && state?.last_name)
-      if(state?.name && state?.last_name){
-        return `${last_name} ${name}`
-      } 
-      if(storage.getItem("userName")){
-        const user = storage.getItem("userName");
-        return user
+      console.log(state?.name && state?.last_name);
+      if (state?.name && state?.last_name) {
+        return `${last_name} ${name}`;
       }
-      return null
-    }
+      if (storage.getItem("userName")) {
+        const user = storage.getItem("userName");
+        return user;
+      }
+      return null;
+    },
   },
 
   actions: {

@@ -20,7 +20,15 @@
           </div>
         </div>
         <div class="message__middle">
-          <p class="message__text">{{ message.card.department.name }}</p>
+          <div class="message__middle-name">
+            <span>Название:&nbsp;</span>
+            <b>{{
+              message.card?.name
+                ? message.card.name
+                : `№${message.card.department?.id}`
+            }}</b>
+          </div>
+          <p class="message__text">{{ message.card.department?.name }}</p>
           <!-- <div class="message__middle-status" v-if="message.value === null">
           <span>Статус:&nbsp;</span>
           <base-status :bg="message.newStatus" />
@@ -91,11 +99,13 @@ export default {
         store.commit("messages/setLoading", false);
       }
     };
-    onMounted(async () => (list.value === null ? await getMessages() : null));
+    onMounted(async () => await getMessages());
 
     const markAsRead = async (id) => {
       try {
+        getMessages();
         await store.dispatch("messages/markAsRead", id);
+        await store.dispatch("messages/totalMessages");
       } catch (e) {
         throw e;
       } finally {
