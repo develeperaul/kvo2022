@@ -1,6 +1,6 @@
 {
   "appId": "kvo.app",
-  "appName": "Quasar App",
+  "appName": "Подача КВО",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www"

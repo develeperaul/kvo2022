@@ -273,8 +273,10 @@ export default {
     };
     const upload = async () => {
       const image = await Camera.getPhoto({
-        quality: 90,
+        quality: 50,
         resultType: CameraResultType.Uri,
+        width: 800,
+        height: 800,
         promptLabelPhoto: "Выбрать из хранилища",
         promptLabelPicture: "Сделать фото",
         allowEditing: false,
