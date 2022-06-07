@@ -1,5 +1,5 @@
 <template>
-  <div class="p-content pb tw-pt-10 tw-h-screen">
+  <div class="p-content pb env-t env-b tw-h-screen">
     <router-view />
   </div>
 </template>
