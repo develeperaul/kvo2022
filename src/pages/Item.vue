@@ -4,7 +4,7 @@
   <div class="" v-if="item">
     <div class="info p-content">
       <h3 class="info__title">Название:</h3>
-      <p class="info__text">{{ item.name ? item.name : `№${item.id}` }}</p>
+      <p class="info__text">{{ item?.name ? item.name : `№${item.id}` }}</p>
     </div>
     <div class="reason" v-if="item.rejectionComment?.length > 0">
       <div class="p-content">
@@ -22,11 +22,11 @@
       <h3 class="info__title">Дата инцидента:</h3>
       <p class="info__text">{{ item.incidentDate }}</p>
     </div>
-    <div class="info p-content">
+    <div class="info p-content" v-if="item.department?.name">
       <h3 class="info__title">Структурное подразделение:</h3>
-      <p class="info__text">{{ item.department.name }}</p>
+      <p class="info__text">{{ item.department?.name }}</p>
     </div>
-    <div class="info p-content">
+    <div class="info p-content" v-if="item?.locationName">
       <h3 class="info__title">Место обнаружения опасности:</h3>
       <p class="info__text">
         {{ item.locationName }}
