@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="p-content">
-    <q-header style="background-color: white" class="env-t">
+    <q-header style="background-color: white">
       <q-toolbar class="tw-flex tw-justify-between tw-gap-4">
         <p class="user-name">{{ $store.getters["auth/userName"] }}</p>
         <q-img
