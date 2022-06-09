@@ -1,0 +1,7 @@
+{
+	"appId": "kvo.app",
+	"appName": "Подача КВО",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "www"
+}
