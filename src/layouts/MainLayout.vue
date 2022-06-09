@@ -1,8 +1,8 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="p-content">
-    <q-header style="background-color: white">
+    <q-header style="background-color: white" class="env-t">
       <q-toolbar class="tw-flex tw-justify-between tw-gap-4">
-        <p class="user-name">{{$store.getters["auth/userName"]}}</p>
+        <p class="user-name">{{ $store.getters["auth/userName"] }}</p>
         <q-img
           src="logout.svg"
           width="25px"
@@ -12,7 +12,7 @@
         />
       </q-toolbar>
     </q-header>
-    <q-footer class="footer__nav" style="background-color: white">
+    <q-footer class="footer__nav env-b" style="background-color: white">
       <NavLink name="create" :exact="true" />
       <NavLink name="history" />
       <NavLink name="messages" :isNotification="isNotification" />
@@ -113,7 +113,10 @@ export default defineComponent({
   box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.05);
 }
 .user-name {
-  font-size: 16px;color: #000; overflow-x: hidden;white-space: nowrap;
+  font-size: 16px;
+  color: #000;
+  overflow-x: hidden;
+  white-space: nowrap;
   padding-left: 8px;
 }
 </style>
