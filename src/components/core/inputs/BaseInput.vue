@@ -8,6 +8,7 @@
     :bottom-slots="false"
     :error="error"
     :mask="mask"
+    :rows="rows"
     dense
     @update:model-value="(e) => $emit('update:modelValue', e)"
   >
@@ -53,6 +54,10 @@ export default {
     mask: {
       type: String,
       default: "",
+    },
+    rows: {
+      type: Number | String,
+      default: 0,
     },
   },
   emits: ["update:modelValue"],

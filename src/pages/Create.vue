@@ -24,6 +24,8 @@
         <base-input
           v-model="place"
           placeholder="Опишите место"
+          type="textarea"
+          rows="2"
           :error="placeError ? true : false"
         />
       </div>
@@ -31,6 +33,8 @@
         <label class="field__label" for="">Опасное действие/условие:</label>
         <base-input
           v-model="danger"
+          type="textarea"
+          rows="3"
           placeholder="Опишите действие/условие"
           :error="dangerError ? true : false"
         />
@@ -42,6 +46,8 @@
         <base-input
           placeholder="Опишите принятые меры"
           v-model="measures"
+          type="textarea"
+          rows="3"
           :error="measuresError ? true : false"
         />
       </div>
@@ -124,8 +130,7 @@ import * as yup from "yup";
 import { setLocale } from "yup";
 import BaseSelect from "src/components/core/selects/BaseSelect.vue";
 import { Notify } from "quasar";
-import { Camera, CameraResultType } from "@capacitor/camera";
-// import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
+import { Camera, CameraResultType } from "@capacitor/camera"; // import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 
 setLocale({
   mixed: {
@@ -281,7 +286,6 @@ export default {
         promptLabelPicture: "Сделать фото",
         allowEditing: false,
       });
-
       let blob = await fetch(image.webPath).then((r) => r.blob());
       let f = new File([blob], `${image.webPath.split("/").pop()}`, {
         type: `image/${image.format}`,
