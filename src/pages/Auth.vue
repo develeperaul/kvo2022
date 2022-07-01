@@ -69,7 +69,6 @@ export default {
       login: yup
         .string()
         .required("Поле Логин обзяательно для заполнения")
-        .matches(/^[A-zА-яЁё]+$/i, "Введите только буквы")
         .label("Login"),
       password: yup.string().required("Поле Пароль обзятельно для заполнения"),
     });
